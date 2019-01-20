@@ -1,9 +1,9 @@
 package bapp
 
 import (
-	"gofra/framework/dependency"
-	"gofra/framework/trace"
-	"gofra/storage"
+	"godi/framework/dependency"
+	"godi/framework/trace"
+	"godi/storage"
 )
 
 // 어플리케이션 구조체의 선언

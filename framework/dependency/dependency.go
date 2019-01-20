@@ -2,7 +2,7 @@ package dependency
 
 import (
 	"fmt"
-	"gofra/framework/trace"
+	"godi/framework/trace"
 	"reflect"
 	"strconv"
 	"time"

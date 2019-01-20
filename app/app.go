@@ -1,10 +1,11 @@
 package app
 
 import (
-	"gofra/framework/dependency"
-	"gofra/framework/trace"
-	"gofra/storage"
+	"godi/framework/dependency"
+	"godi/framework/trace"
+	"godi/storage"
 	"time"
+	"fmt"
 )
 
 // Declaration of Application
@@ -33,7 +34,8 @@ func (a *App) Start() {
 
 func (a *App) RepeatPrint(){
 	for {
-		a.Storage.Name()
+		fmt.Println("my storage = ", a.Storage.Name())
+		time.Sleep(500 * time.Millisecond)
 	}
 }
 

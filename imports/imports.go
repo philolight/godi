@@ -1,8 +1,8 @@
 package imports
 
 import (
-	_ "gofra/app"
-	_ "gofra/storage/nosql"
-	_ "gofra/storage/rdb"
-	_ "gofra/bapp"
+	_ "godi/app"
+	_ "godi/storage/nosql"
+	_ "godi/storage/rdb"
+	_ "godi/bapp"
 )

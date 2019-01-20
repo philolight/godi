@@ -16,7 +16,7 @@ import (
 var configPath string
 
 func init() {
-	flag.StringVar(&configPath, "c", "main/app.conf", "dependency configration file path")
+	flag.StringVar(&configPath, "c", "main/app_rdb.conf", "dependency configration file path")
 }
 
 func main() {
@@ -31,6 +31,7 @@ func main() {
 		log.Fatal(err)
 		os.Exit(1)
 	}
+
 	if err := dependency.Inject(); err != nil {
 		log.Fatal(err)
 		os.Exit(1)

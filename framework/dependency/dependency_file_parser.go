@@ -19,7 +19,6 @@ func parseConfigFile(path string) error {
 		lines++
 		line := strings.Trim(scanner.Text(), " \t\n\r")
 		if strings.HasPrefix(line, "{}") {
-			fmt.Println("New", line)
 			New(line)
 		} else if strings.HasSuffix(line, "{") {
 			client := strings.Trim(line[0:len(line)-1], CutSet)
@@ -48,8 +47,6 @@ func parseBean(client string, scanner *bufio.Scanner, lines int) error {
 
 		field := strings.Trim(line[0:equalIdx], CutSet)
 		subject := strings.Trim(line[equalIdx+1:], CutSet)
-
-		fmt.Println("Set", client, field, subject)
 
 		if err := Set(client, field, subject); err != nil {
 			return err

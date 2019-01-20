@@ -1,8 +1,8 @@
 package rdb
 
 import (
-	"gofra/framework/dependency"
-	"gofra/framework/trace"
+	"godi/framework/dependency"
+	"godi/framework/trace"
 )
 
 func init() {

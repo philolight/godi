@@ -6,19 +6,19 @@ import (
 	"testing"
 	"time"
 
-	"gofra/bapp"
-	_ "gofra/bapp"
-	"gofra/framework/dependency"
-	"gofra/framework/trace"
-	_ "gofra/storage/nosql"
-	_ "gofra/storage/rdb"
+	"godi/bapp"
+	_ "godi/bapp"
+	"godi/framework/dependency"
+	"godi/framework/trace"
+	_ "godi/storage/nosql"
+	_ "godi/storage/rdb"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func TestApp(t *testing.T) {
 	dependency.Set("app:app", "Storage", "storage.rdb:rdb")
-	dependency.Set("app:app", "Name", "storage.rdb:rdb")
+	dependency.Set("app:app", "Name", "Application")
 	dependency.Set("app:app", "Value", "987654321")
 	dependency.Set("app:app", "Dur", "10s")
 	dependency.Set("app:app", "T", "2006-02-03T15:04:05Z")
@@ -35,7 +35,7 @@ func TestApp(t *testing.T) {
 	assert.Equal(t, "storage.rdb:rdb", StorageName())
 
 	a := dependency.Get("app:app").(*App)
-	assert.Equal(t, "storage.rdb:rdb", a.Name)
+	assert.Equal(t, "Application", a.Name)
 	assert.Equal(t, 987654321, a.Value)
 	assert.Equal(t, time.Second*10, a.Dur)
 
@@ -99,7 +99,7 @@ func TestLoad(t *testing.T) {
 	assert.Equal(t, "storage.rdb:rdb", StorageName())
 
 	a := dependency.Get("app:app").(*App)
-	assert.Equal(t, "storage.rdb:rdb", a.Name)
+	assert.Equal(t, "Application", a.Name)
 	assert.Equal(t, 987654321, a.Value)
 	assert.Equal(t, time.Second*10, a.Dur)
 
