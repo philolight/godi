@@ -34,7 +34,7 @@ func TestApp(t *testing.T) {
 
 	assert.Equal(t, "storage.rdb:rdb", StorageName())
 
-	a := dependency.Get("app:app").(*app)
+	a := dependency.Get("app:app").(*App)
 	assert.Equal(t, "storage.rdb:rdb", a.Name)
 	assert.Equal(t, 987654321, a.Value)
 	assert.Equal(t, time.Second*10, a.Dur)
@@ -47,7 +47,7 @@ func TestApp(t *testing.T) {
 }
 
 func TestAppType(t *testing.T) {
-	sut := app{}
+	sut := App{}
 
 	rsut := reflect.ValueOf(sut)
 
@@ -98,7 +98,7 @@ func TestLoad(t *testing.T) {
 
 	assert.Equal(t, "storage.rdb:rdb", StorageName())
 
-	a := dependency.Get("app:app").(*app)
+	a := dependency.Get("app:app").(*App)
 	assert.Equal(t, "storage.rdb:rdb", a.Name)
 	assert.Equal(t, 987654321, a.Value)
 	assert.Equal(t, time.Second*10, a.Dur)

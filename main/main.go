@@ -1,35 +1,45 @@
 package main
 
 import (
-	"fmt"
-	"gofra/app"
-	"gofra/framework/dependency"
-	"gofra/framework/property"
-	"gofra/framework/trace"
-	_ "gofra/imports"
 	"os"
+	"flag"
+	"time"
+
+	"godi/app"
+	"godi/framework/dependency"
+	"godi/framework/trace"
+	_ "godi/imports"
 
 	"github.com/labstack/gommon/log"
 )
 
-func main() {
-	if err := dependency.Load("app.conf"); err != nil {
-		log.Fatal(err)
-		os.Exit(1)
-	}
-	dependency.Create()
-	dependency.Inject()
+var configPath string
 
-	if err := property.Load("filename"); err != nil {
+func init() {
+	flag.StringVar(&configPath, "c", "main/app.conf", "dependency configration file path")
+}
+
+func main() {
+	flag.Parse()
+
+	if err := dependency.Load(configPath); err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
-	if err := property.Init(); err != nil {
+
+	if err := dependency.Create(); err != nil {
+		log.Fatal(err)
+		os.Exit(1)
+	}
+	if err := dependency.Inject(); err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
 
 	trace.Dump()
 
-	fmt.Println("app.Storage = ", app.StorageName())
+	appInstance := dependency.Get("app:app").(*app.App)
+	appInstance.Start()
+
+	time.Sleep(10 * time.Second)
 }

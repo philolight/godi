@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-// 어플리케이션 구조체의 선언
-type app struct {
+// Declaration of Application
+type App struct {
 	property string
 	Storage  storage.Storage
 	Name     string
@@ -17,21 +17,21 @@ type app struct {
 	T        time.Time
 }
 
-// init() 함수에서 콜백을 등록한다.
+// Factory method register in init()
 func init() {
 	dependency.FactoryRegister(Factory)
 }
 
+// Factory method of app
 func Factory() interface{} {
-	return &app{}
+	return &App{}
 }
 
-// 4. 기능
-func (a *app) Func() {
+func (a *App) Start() {
 	go a.RepeatPrint()
 }
 
-func (a *app) RepeatPrint(){
+func (a *App) RepeatPrint(){
 	for {
 		a.Storage.Name()
 	}
@@ -39,6 +39,6 @@ func (a *app) RepeatPrint(){
 
 func StorageName() string {
 	obj := dependency.Get(trace.MyName())
-	a := obj.(*app)
+	a := obj.(*App)
 	return a.Storage.Name()
 }

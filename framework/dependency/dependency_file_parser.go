@@ -18,7 +18,6 @@ func parseConfigFile(path string) error {
 	for scanner.Scan() {
 		lines++
 		line := strings.Trim(scanner.Text(), " \t\n\r")
-		fmt.Println(lines, ":", line)
 		if strings.HasPrefix(line, "{}") {
 			fmt.Println("New", line)
 			New(line)
