@@ -1,6 +1,12 @@
 # godi
 File based dependency injection framework in golang
 
+You can set parameters and set dependencies of application instances with file by godi.
+
+Your application instances has no direct dependencies, so you can easily separate your application if you want to make it as a micro service server.
+
+You don't need setter or constructor, and you don't need dependency injection codes for your application.
+
 1. Register Factory Method
 
 If you have struct App like :
