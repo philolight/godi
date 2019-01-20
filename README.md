@@ -4,6 +4,7 @@ File based dependency injection framework in golang
 1. Register Factory Method
 
 If you have struct App like :
+
     type App struct {
 	    property string
 	    Storage  storage.Storage
