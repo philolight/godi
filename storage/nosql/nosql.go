@@ -3,6 +3,7 @@ package nosql
 import (
 	"godi/framework/dependency"
 	"godi/framework/trace"
+	"fmt"
 )
 
 func init() {
@@ -28,4 +29,12 @@ func (o *nosql) Delete(key string)             {}
 func (o *nosql) Update(key string, val string) {}
 func (o *nosql) Name() string {
 	return trace.MyName()
+}
+
+func (o *nosql) Init(){
+	fmt.Println(trace.MyName(), "init")
+}
+
+func (o *nosql) Start(){
+	fmt.Println(trace.MyName(), "start")
 }

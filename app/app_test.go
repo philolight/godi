@@ -22,7 +22,7 @@ func TestApp(t *testing.T) {
 	dependency.Set("app:app", "Value", "987654321")
 	dependency.Set("app:app", "Dur", "10s")
 	dependency.Set("app:app", "T", "2006-02-03T15:04:05Z")
-	dependency.Set("bapp:bapp", "Storage", "storage.rdb:rdb")
+	dependency.Set("BApp", "Storage", "storage.rdb:rdb")
 	dependency.Set("storage.rdb:rdb", "Connections", "100")
 
 	err := dependency.Create()

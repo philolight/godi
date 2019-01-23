@@ -28,7 +28,13 @@ func Factory() interface{} {
 	return &App{}
 }
 
+func (a *App) Init(){
+	fmt.Println(trace.MyName(), "Init")
+	fmt.Printf("%+v\n", a)
+}
+
 func (a *App) Start() {
+	fmt.Println(trace.MyName(), "Start")
 	go a.RepeatPrint()
 }
 

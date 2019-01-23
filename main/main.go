@@ -5,18 +5,19 @@ import (
 	"flag"
 	"time"
 
-	"godi/app"
 	"godi/framework/dependency"
 	"godi/framework/trace"
 	_ "godi/imports"
 
 	"github.com/labstack/gommon/log"
+	"fmt"
 )
 
 var configPath string
 
 func init() {
 	flag.StringVar(&configPath, "c", "main/app_rdb.conf", "dependency configration file path")
+	//flag.StringVar(&configPath, "c", "main/app_rdb.conf", "dependency configration file path")
 }
 
 func main() {
@@ -39,8 +40,13 @@ func main() {
 
 	trace.Dump()
 
-	appInstance := dependency.Get("app:app").(*app.App)
-	appInstance.Start()
+	dependency.ObjectDiagram()
 
-	time.Sleep(10 * time.Second)
+	fmt.Println(">>> Init")
+	dependency.Call("Init")
+
+	fmt.Println(">>> Start")
+	dependency.Call("Start")
+
+	time.Sleep(3 * time.Second)
 }

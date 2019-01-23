@@ -14,6 +14,7 @@ type dependency struct {
 	binds     []bind
 	factories map[string]Factory
 	beans     map[string]interface{}
+	tc *treeContainer
 }
 
 type bind struct {
@@ -25,11 +26,24 @@ type bind struct {
 var defaultDependency = &dependency{
 	factories: make(map[string]Factory),
 	beans:     make(map[string]interface{}),
+	tc : newTreeContainer(),
 }
 
-func FactoryRegister(f Factory) {
-	trace.Trace()
-	defaultDependency.factories[trace.PathFileWithPC(1)] = f
+func FactoryRegister(f Factory) error {
+	return factoryWithTypePathName(f, trace.EventTypePath(2), trace.PathFileWithPC(1))
+}
+
+func FactoryWithName(f Factory, name string) error {
+	return factoryWithTypePathName(f, trace.EventTypePath(2), name)
+}
+
+func factoryWithTypePathName(f Factory, eventTypePath string, name string) error {
+	trace.TraceExplicit(eventTypePath, name)
+	if _, ok := defaultDependency.factories[name]; ok{
+		return fmt.Errorf("duplicated factory name : %s", name)
+	}
+	defaultDependency.factories[name] = f
+	return nil
 }
 
 func Load(filename string) error {
@@ -80,6 +94,7 @@ func (o *dependency) Inject() error {
 			rs := reflect.ValueOf(subject)
 			if rs.Type().ConvertibleTo(field.Type()) {
 				field.Set(rs)
+				o.tc.Add(iv.client, client, iv.subject, subject, iv.field)
 				continue
 			}
 		}
@@ -101,6 +116,14 @@ func (o *dependency) Inject() error {
 		fmt.Println("injected : ", iv.client, " ", iv.field, " ", iv.subject)
 	}
 	return nil
+}
+
+func (o *dependency) Call(funcName string) {
+	o.tc.Call(funcName)
+}
+
+func (o *dependency) ObjectDiagram() {
+	o.tc.Print()
 }
 
 func setWellKnownType(field *reflect.Value, ftype reflect.Type, subject string) (bool, error) {
@@ -191,4 +214,12 @@ func Set(client string, field string, subject string) error {
 
 func Get(name string) interface{} {
 	return defaultDependency.beans[name]
+}
+
+func Call(funcName string) {
+	defaultDependency.Call(funcName)
+}
+
+func ObjectDiagram() {
+	defaultDependency.ObjectDiagram()
 }

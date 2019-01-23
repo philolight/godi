@@ -3,6 +3,7 @@ package rdb
 import (
 	"godi/framework/dependency"
 	"godi/framework/trace"
+	"fmt"
 )
 
 func init() {
@@ -29,4 +30,11 @@ func (o *rdb) Delete(key string)             {}
 func (o *rdb) Update(key string, val string) {}
 func (o *rdb) Name() string {
 	return trace.MyName()
+}
+func (o *rdb) Init(){
+	fmt.Println(trace.MyName(), "init")
+}
+
+func (o *rdb) Start(){
+	fmt.Println(trace.MyName(), "start")
 }

@@ -28,14 +28,19 @@ func PathFileWithPC(counter int) string {
 	return path + ":" + file
 }
 
-func Trace() {
-	// 이벤트 타입
-	eventTypePC, _, _, _ := runtime.Caller(1)
+func EventTypePath(skip int) string{
+	eventTypePC, _, _, _ := runtime.Caller(skip)
 	eventTypePath := runtime.FuncForPC(eventTypePC).Name()
 	eventTypePath = strings.Replace(eventTypePath, "/", ".", -1)
+	return eventTypePath
+}
 
-	listener := PathFileWithPC(2)
+func Trace() {
+	eventTypePath := EventTypePath(2)
+	TraceExplicit(eventTypePath, PathFileWithPC(2))
+}
 
+func TraceExplicit(eventTypePath string, listener string){
 	var slice []string
 	var ok bool
 
