@@ -10,6 +10,7 @@ Main Feature
 - Easy configuration file as direct DI code
 - No redundant dependency between application instances
   (If your application instance depends on a interface, it doesn't know concrete struct)
+- Can set complex type parameters (slice, map and the combinations) with json style string
 
 You can set parameters and set dependencies of application instances with file by godi.
 

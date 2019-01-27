@@ -50,31 +50,13 @@ func Load(filename string) error {
 	return parseConfigFile(filename)
 }
 
-func Create() error {
-	return defaultDependency.Create()
-}
-
 func Inject() error {
 	return defaultDependency.Inject()
 }
 
-func (o *dependency) Create() error {
-	for _, b := range o.binds {
-		o.beans[b.client] = nil
-		o.beans[b.subject] = nil
-	}
-
-	for name := range o.beans {
-		if factory, ok := o.factories[name]; ok {
-			o.beans[name] = factory()
-			fmt.Println("created : ", name)
-		}
-	}
-
-	return nil
-}
-
 func (o *dependency) Inject() error {
+	o.create()
+
 	for _, iv := range o.binds {
 		client := o.beans[iv.client]
 		if client == nil {
@@ -109,13 +91,30 @@ func (o *dependency) Inject() error {
 			continue
 		}
 
-		if _, err = setPrimitiveType(&field, ftype, iv.subject); err != nil {
+		value, err := Value(ftype, iv.subject)
+		if err != nil {
 			return err
 		}
+
+		field.Set(*value)
 
 		fmt.Println("injected : ", iv.client, " ", iv.field, " ", iv.subject)
 	}
 	return nil
+}
+
+func (o *dependency) create() {
+	for _, b := range o.binds {
+		o.beans[b.client] = nil
+		o.beans[b.subject] = nil
+	}
+
+	for name := range o.beans {
+		if factory, ok := o.factories[name]; ok {
+			o.beans[name] = factory()
+			fmt.Println("created : ", name)
+		}
+	}
 }
 
 func (o *dependency) Call(funcName string) {
@@ -181,6 +180,91 @@ func setPrimitiveType(field *reflect.Value, ftype reflect.Type, subject string) 
 			return false, fmt.Errorf("inject error - not compatable type %s, field %s subject %s", ftype, field, subject)
 		}
 		field.SetFloat(v)
+
+	default:
+		return false, fmt.Errorf("inject error - not supported type %s, field %s", ftype, field)
+	}
+
+	return true, nil
+}
+
+func setPointerType(field *reflect.Value, ftype reflect.Type, subject string) (bool, error) {
+	switch ftype.Kind() {
+	case reflect.String:
+		field.Set(reflect.ValueOf(&subject))
+	case reflect.Bool:
+		v, err := strconv.ParseBool(subject)
+		if err != nil {
+			return false, fmt.Errorf("inject error - not compatable type %s, field %s subject %s", ftype, field, subject)
+		}
+		field.Set(reflect.ValueOf(&v))
+		return true, nil
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
+		v, err := strconv.ParseInt(subject, 10, int(ftype.Size()*8))
+		if err != nil {
+			return false, fmt.Errorf("inject error - not compatable type %s, field %s subject %s", ftype, field, subject)
+		}
+		switch ftype.Kind(){
+		case reflect.Int:
+			var con int
+			con = (int)(v)
+			field.Set(reflect.ValueOf(&con))
+		case reflect.Int8:
+			var con int8
+			con = (int8)(v)
+			field.Set(reflect.ValueOf(&con))
+		case reflect.Int16:
+			var con int16
+			con = (int16)(v)
+			field.Set(reflect.ValueOf(&con))
+		case reflect.Int32:
+			var con int32
+			con = (int32)(v)
+			field.Set(reflect.ValueOf(&con))
+		case reflect.Int64:
+			var con int64
+			con = (int64)(v)
+			field.Set(reflect.ValueOf(&con))
+		}
+	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
+		v, err := strconv.ParseUint(subject, 10, int(ftype.Size()*8))
+		if err != nil {
+			return false, fmt.Errorf("inject error - not compatable type %s, field %s subject %s", ftype, field, subject)
+		}
+		switch ftype.Kind(){
+		case reflect.Uint:
+			var con uint
+			con = (uint)(v)
+			field.Set(reflect.ValueOf(&con))
+		case reflect.Uint8:
+			var con uint8
+			con = (uint8)(v)
+			field.Set(reflect.ValueOf(&con))
+		case reflect.Uint16:
+			var con uint16
+			con = (uint16)(v)
+			field.Set(reflect.ValueOf(&con))
+		case reflect.Uint32:
+			var con uint32
+			con = (uint32)(v)
+			field.Set(reflect.ValueOf(&con))
+		case reflect.Uint64:
+			var con uint64
+			con = (uint64)(v)
+			field.Set(reflect.ValueOf(&con))
+		}
+	case reflect.Float32:
+		v, err := strconv.ParseFloat(subject, 32)
+		if err != nil {
+			return false, fmt.Errorf("inject error - not compatable type %s, field %s subject %s", ftype, field, subject)
+		}
+		field.Set(reflect.ValueOf(&v))
+	case reflect.Float64:
+		v, err := strconv.ParseFloat(subject, 64)
+		if err != nil {
+			return false, fmt.Errorf("inject error - not compatable type %s, field %s subject %s", ftype, field, subject)
+		}
+		field.Set(reflect.ValueOf(&v))
 
 	default:
 		return false, fmt.Errorf("inject error - not supported type %s, field %s", ftype, field)

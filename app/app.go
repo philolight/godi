@@ -6,16 +6,18 @@ import (
 	"godi/storage"
 	"time"
 	"fmt"
+	"godi/app/other"
 )
 
 // Declaration of Application
 type App struct {
 	property string
 	Storage  storage.Storage
-	Name     string
-	Value    int
+	Name     *string
+	Value    *int
 	Dur      time.Duration
 	T        time.Time
+	O other.Other
 }
 
 // Factory method register in init()

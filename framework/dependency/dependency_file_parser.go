@@ -23,6 +23,8 @@ func parseConfigFile(path string) error {
 		} else if strings.HasSuffix(line, "{") {
 			client := strings.Trim(line[0:len(line)-1], CutSet)
 			parseBean(client, scanner, lines)
+		} else if !strings.HasPrefix(line, "#"){
+			return fmt.Errorf("parse error %d : %s", lines, line)
 		}
 	}
 
@@ -37,6 +39,10 @@ func parseBean(client string, scanner *bufio.Scanner, lines int) error {
 		line := strings.Trim(scanner.Text(), CutSet)
 		if line == "}" {
 			return nil
+		}
+
+		if strings.HasPrefix(line, "#"){
+			continue
 		}
 
 		equalIdx := strings.Index(line, "=")

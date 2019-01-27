@@ -25,9 +25,7 @@ func TestApp(t *testing.T) {
 	dependency.Set("BApp", "Storage", "storage.rdb:rdb")
 	dependency.Set("storage.rdb:rdb", "Connections", "100")
 
-	err := dependency.Create()
-	assert.Nil(t, err)
-	err = dependency.Inject()
+	err := dependency.Inject()
 	assert.Nil(t, err)
 
 	trace.Dump()
@@ -89,8 +87,6 @@ func TestLoad(t *testing.T) {
 	err := dependency.Load("app_test.conf")
 	assert.Nil(t, err)
 
-	err = dependency.Create()
-	assert.Nil(t, err)
 	err = dependency.Inject()
 	assert.Nil(t, err)
 

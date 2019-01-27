@@ -1,16 +1,17 @@
 package main
 
 import (
-	"os"
 	"flag"
+	"os"
 	"time"
 
 	"godi/framework/dependency"
 	"godi/framework/trace"
 	_ "godi/imports"
 
-	"github.com/labstack/gommon/log"
 	"fmt"
+
+	"github.com/labstack/gommon/log"
 )
 
 var configPath string
@@ -24,11 +25,6 @@ func main() {
 	flag.Parse()
 
 	if err := dependency.Load(configPath); err != nil {
-		log.Fatal(err)
-		os.Exit(1)
-	}
-
-	if err := dependency.Create(); err != nil {
 		log.Fatal(err)
 		os.Exit(1)
 	}
